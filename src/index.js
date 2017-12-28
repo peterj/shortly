@@ -4,17 +4,18 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-import {
-    ApolloClient,
-    ApolloProvider,
-    createNetworkInterface,
-} from 'react-apollo';
+import { ApolloProvider } from 'react-apollo';
+import { ApolloClient } from 'apollo-client';
+import { HttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const networkInterface = createNetworkInterface({
-    uri: 'https://api.graph.cool/simple/v1/cjbqvtox232ur01419pee2xbi',
+const client = new ApolloClient({
+    link: new HttpLink(
+        'https://api.graph.cool/simple/v1/cjbqvtox232ur01419pee2xbi',
+    ),
+    cache: new InMemoryCache(),
 });
 
-const client = new ApolloClient({ networkInterface });
 const withApolloProvider = Comp => (
     <ApolloProvider client={client}>{Comp}</ApolloProvider>
 );
