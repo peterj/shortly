@@ -9,10 +9,15 @@ import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
+const GRAPHQL_ENDPOINT = '';
+
+if (!GRAPHQL_ENDPOINT) {
+    throw Error('Provide a GraphQL endpoint.');
+}
 const client = new ApolloClient({
-    link: new HttpLink(
-        'https://api.graph.cool/simple/v1/cjbqvtox232ur01419pee2xbi',
-    ),
+    link: new HttpLink({
+        uri: GRAPHQL_ENDPOINT,
+    }),
     cache: new InMemoryCache(),
 });
 

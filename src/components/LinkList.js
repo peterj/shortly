@@ -1,35 +1,41 @@
 import React, { Component } from 'react';
 import Link from './Link';
 
-const ALL_LINKS = [
-    {
-        id: '1',
-        hash: 'ABC',
-        url: 'http://google.com',
-        description: 'Google shortlink',
-    },
-    {
-        id: '2',
-        hash: 'DEF',
-        url: 'http://graph.cool',
-        description: 'Graphcool shortlink',
-    },
-    {
-        id: '3',
-        hash: 'GHI',
-        url: 'http://reactjs.org',
-        description: 'ReactJS shortlink',
-    },
-];
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
+
+const ALL_LINKS_QUERY = gql`
+    query AllLinksQuery {
+        allLinks {
+            id
+            url
+            description
+            hash
+        }
+    }
+`;
 
 class LinkList extends Component {
     render() {
+        if (this.props.allLinksQuery && this.props.allLinksQuery.loading) {
+            return <div>Loading ...</div>;
+        }
+
+        if (this.props.allLinksQuery && this.props.allLinksQuery.error) {
+            return <div>Error occurred</div>;
+        }
+
+        const allLinks = this.props.allLinksQuery.allLinks;
+        if (allLinks.length === 0) {
+            return <div>No links...</div>;
+        }
+
         return (
             <div>
-                {ALL_LINKS.map(link => <Link key={link.id} link={link} />)}
+                {allLinks.map(link => <Link key={link.id} link={link} />)}
             </div>
         );
     }
 }
 
-export default LinkList;
+export default graphql(ALL_LINKS_QUERY, { name: 'allLinksQuery' })(LinkList);
