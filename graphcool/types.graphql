@@ -1,6 +1,6 @@
 type Link @model {
     id: ID! @isUnique
-    hash: String!
+    hash: String
     url: String!
     description: String
 }
