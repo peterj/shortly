@@ -5,10 +5,22 @@ type Link @model {
     description: String
     stats: LinkStats @relation(name: "LinkOnLinkStats")
     dummy: String
+    createdBy: User @relation(name: "LinkOnUser")
 }
 
 type LinkStats @model {
     id: ID! @isUnique
     clicks: Int
     link: Link @relation(name: "LinkOnLinkStats")
+}
+
+type User @model {
+    # Required system field:
+    id: ID! @isUnique # read-only (managed by Graphcool)
+    # Optional system fields (remove if not needed):
+    createdAt: DateTime! # read-only (managed by Graphcool)
+    updatedAt: DateTime! # read-only (managed by Graphcool)
+    email: String! @isUnique
+    password: String!
+    links: [Link!]! @relation(name: "LinkOnUser")
 }
