@@ -5,8 +5,8 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
 const ALL_LINKS_QUERY = gql`
-    query AllLinksQuery {
-        allLinks {
+    query AllLinksQuery($createdById: ID!) {
+        allLinks(filter: { createdBy: { id: $createdById } }) {
             id
             url
             description
@@ -18,9 +18,15 @@ const ALL_LINKS_QUERY = gql`
     }
 `;
 
+
 const LINKS_SUBSCRIPTION = gql`
-    subscription NewLinkCreatedSubscription {
-        Link(filter: { mutation_in: [CREATED, UPDATED] }) {
+    subscription NewLinkCreatedSubscription($createdById: ID!) {
+        Link(
+            filter: {
+                mutation_in: [CREATED, UPDATED]
+                node: { createdBy: { id: $createdById } }
+            }
+        ) {
             node {
                 id
                 url
@@ -38,6 +44,7 @@ class LinkList extends Component {
     componentDidMount() {
         this.props.allLinksQuery.subscribeToMore({
             document: LINKS_SUBSCRIPTION,
+            variables: { createdById: localStorage.getItem('SHORTLY_ID') },
             updateQuery: (prev, { subscriptionData }) => {
                 if (
                     prev.allLinks.find(
@@ -65,6 +72,7 @@ class LinkList extends Component {
         }
 
         if (this.props.allLinksQuery && this.props.allLinksQuery.error) {
+            console.log(JSON.stringify(this.props.allLinksQuery));
             return <div>Error occurred</div>;
         }
 
@@ -83,4 +91,9 @@ class LinkList extends Component {
 
 export default graphql(ALL_LINKS_QUERY, {
     name: 'allLinksQuery',
+    options: props => ({
+        variables: {
+            createdById: localStorage.getItem('SHORTLY_ID'),
+        },
+    }),
 })(LinkList);

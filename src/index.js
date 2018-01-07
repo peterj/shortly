@@ -12,6 +12,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { ApolloLink } from 'apollo-link';
 
 const GRAPHQL_ENDPOINT = '';
 const SUBSCRIPTIONS_ENDPOINT = '';
@@ -28,6 +29,19 @@ const httpLink = new HttpLink({
     uri: GRAPHQL_ENDPOINT,
 });
 
+const apolloLinkWithToken = new ApolloLink((operation, forward) => {
+    const token = localStorage.getItem('SHORTLY_TOKEN');
+    const authHeader = token ? `Bearer ${token}` : null;
+    operation.setContext({
+        headers: {
+            authorization: authHeader,
+        },
+    });
+    return forward(operation);
+});
+
+const httpLinkWithToken = apolloLinkWithToken.concat(httpLink);
+
 const wsLink = new WebSocketLink({
     uri: SUBSCRIPTIONS_ENDPOINT,
     options: {
@@ -43,7 +57,7 @@ const link = split(
         return kind === 'OperationDefinition' && operation === 'subscription';
     },
     wsLink,
-    httpLink,
+    httpLinkWithToken,
 );
 
 const client = new ApolloClient({
