@@ -9,6 +9,7 @@ const GET_FULL_LINK_QUERY = gql`
             id
             url
             stats {
+                id
                 clicks
             }
         }
@@ -17,7 +18,15 @@ const GET_FULL_LINK_QUERY = gql`
 
 const UPDATE_CLICK_COUNT_MUTATION = gql`
     mutation UpdateClickCount($id: ID!, $clicks: Int!) {
-        updateLink(id: $id, dummy: "dummy", stats: { clicks: $clicks }) {
+        updateLinkStats(id: $id, clicks: $clicks) {
+            id
+        }
+    }
+`;
+
+const CREATE_LINK_STATS_MUTATION = gql`
+    mutation CreateLinkStats($linkId: ID!, $clicks: Int!) {
+        createLinkStats(linkId: $linkId, clicks: $clicks) {
             id
         }
     }
@@ -25,6 +34,7 @@ const UPDATE_CLICK_COUNT_MUTATION = gql`
 
 const ShortLinkRedirect = ({
     updateClickCount,
+    createLinkStats,
     hash,
     data: { loading, error, allLinks },
 }) => {
@@ -41,18 +51,29 @@ const ShortLinkRedirect = ({
     }
 
     const linkInfo = allLinks[0];
-    let currentClicks = (linkInfo.stats && linkInfo.stats.clicks) || 0;
 
-    // Increment the click count
-    currentClicks++;
+    if (!linkInfo.stats) {
+        // Create new link stats
+        createLinkStats({
+            variables: {
+                linkId: linkInfo.id,
+                clicks: 1,
+            },
+        });
+    } else {
+        let currentClicks = (linkInfo.stats && linkInfo.stats.clicks) || 0;
 
-    // Update the click count.
-    updateClickCount({
-        variables: {
-            id: linkInfo.id,
-            clicks: currentClicks,
-        },
-    });
+        // Increment the click count
+        currentClicks++;
+
+        // Update the click count.
+        updateClickCount({
+            variables: {
+                id: linkInfo.stats.id,
+                clicks: currentClicks,
+            },
+        });
+    }
 
     // Navigate to the full URL
     window.location = linkInfo.url;
@@ -65,6 +86,7 @@ ShortLinkRedirect.propTypes = {
 
 export default compose(
     graphql(UPDATE_CLICK_COUNT_MUTATION, { name: 'updateClickCount' }),
+    graphql(CREATE_LINK_STATS_MUTATION, { name: 'createLinkStats' }),
     graphql(GET_FULL_LINK_QUERY, {
         options: ({ hash }) => ({ variables: { hash } }),
     }),
