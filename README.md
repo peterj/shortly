@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpeterj%2Fshortly.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpeterj%2Fshortly?ref=badge_shield)
+
 ### Shortly
 
 Simple URL shortener built with React, Apollo and GraphQL. You can find the
@@ -14,8 +16,6 @@ login and then deploy the Graphcool service:
 cd graphcool
 
 # Login to graphcool
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpeterj%2Fshortly.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpeterj%2Fshortly?ref=badge_shield)
-
 graphcool login
 
 # Deploy the graphcool service
