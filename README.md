@@ -14,6 +14,8 @@ login and then deploy the Graphcool service:
 cd graphcool
 
 # Login to graphcool
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpeterj%2Fshortly.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpeterj%2Fshortly?ref=badge_shield)
+
 graphcool login
 
 # Deploy the graphcool service
@@ -29,3 +31,7 @@ Next, paste the Simple and Subscriptions API URLs to index.js.
 
 After you've set up Graphcool and pasted the Simple and Subscriptions API URLs
 to index.js, you can run `yarn start` to start the website.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpeterj%2Fshortly.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpeterj%2Fshortly?ref=badge_large)
