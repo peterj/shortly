@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+
 import LinkList from './components/LinkList';
 import CreateShortLink from './components/CreateShortLink';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import constants from './constants';
 
 const LOGGED_IN_USER_QUERY = gql`
     query CurrentUser {
@@ -14,8 +16,8 @@ const LOGGED_IN_USER_QUERY = gql`
 
 class Home extends Component {
     logout = () => {
-        localStorage.removeItem('SHORTLY_ID');
-        localStorage.removeItem('SHORTLY_TOKEN');
+        localStorage.removeItem(constants.shortlyID);
+        localStorage.removeItem(constants.shortlyToken);
         this.props.history.push('/');
     };
 

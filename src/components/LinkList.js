@@ -3,6 +3,7 @@ import Link from './Link';
 
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import constants from '../constants';
 
 const ALL_LINKS_QUERY = gql`
     query AllLinksQuery($createdById: ID!) {
@@ -44,7 +45,7 @@ class LinkList extends Component {
     componentDidMount() {
         this.props.allLinksQuery.subscribeToMore({
             document: LINKS_SUBSCRIPTION,
-            variables: { createdById: localStorage.getItem('SHORTLY_ID') },
+            variables: { createdById: localStorage.getItem(constants.shortlyID) },
             updateQuery: (prev, { subscriptionData }) => {
                 if (
                     prev.allLinks.find(
@@ -93,7 +94,7 @@ export default graphql(ALL_LINKS_QUERY, {
     name: 'allLinksQuery',
     options: props => ({
         variables: {
-            createdById: localStorage.getItem('SHORTLY_ID'),
+            createdById: localStorage.getItem(constants.shortlyID),
         },
     }),
 })(LinkList);
