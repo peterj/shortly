@@ -12,15 +12,15 @@ const SIGNUP_USER_MUTATION = gql`
 `;
 
 class Signup extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            password: '',
-        };
+    state = {
+      email: '',
+      password: '',
+      error: ''
     }
 
     signup = async () => {
+        this.setState({error: ''});
+        
         const { email, password } = this.state;
         try {
             const result = await this.props.signupUserMutation({
@@ -34,8 +34,8 @@ class Signup extends Component {
             localStorage.setItem('SHORTLY_ID', result.data.signupUser.id);
             localStorage.setItem('SHORTLY_TOKEN', result.data.signupUser.token);
             this.props.history.push('/');
-        } catch (err) {
-            // TODO: Handle the error properly
+        } catch (error) {
+            this.setState({error: `Sorry, an error occured on signing up. (${error})`})
         }
     };
 
@@ -60,6 +60,9 @@ class Signup extends Component {
                 />
                 <br />
                 <button onClick={() => this.signup()}>Signup</button>
+                { this.state.error &&
+                  <p className="error">{this.state.error}</p>
+                }
             </div>
         );
     }
