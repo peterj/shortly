@@ -14,6 +14,8 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { ApolloLink } from 'apollo-link';
 
+import constants from './constants';
+
 const GRAPHQL_ENDPOINT = '';
 const SUBSCRIPTIONS_ENDPOINT = '';
 
@@ -30,7 +32,7 @@ const httpLink = new HttpLink({
 });
 
 const apolloLinkWithToken = new ApolloLink((operation, forward) => {
-    const token = localStorage.getItem('SHORTLY_TOKEN');
+    const token = localStorage.getItem(constants.shortlyToken);
     const authHeader = token ? `Bearer ${token}` : null;
     operation.setContext({
         headers: {

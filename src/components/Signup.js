@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import constants from '../constants';
 
 const SIGNUP_USER_MUTATION = gql`
     mutation SignupUser($email: String!, $password: String!) {
@@ -31,8 +33,8 @@ class Signup extends Component {
             });
 
             // Store the ID and token in local storage.
-            localStorage.setItem('SHORTLY_ID', result.data.signupUser.id);
-            localStorage.setItem('SHORTLY_TOKEN', result.data.signupUser.token);
+            localStorage.setItem(constants.shortlyID, result.data.signupUser.id);
+            localStorage.setItem(constants.shortlyToken, result.data.signupUser.token);
             this.props.history.push('/');
         } catch (err) {
             // TODO: Handle the error properly
