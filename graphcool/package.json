@@ -8,6 +8,6 @@
     "@types/validator": "^6.3.0",
     "bcryptjs": "^2.4.3",
     "graphql-request": "^1.4.0",
-    "validator": "^9.0.0"
+    "validator": "^13.7.0"
   }
 }
